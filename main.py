@@ -20,3 +20,13 @@ def write_results(results: list[tuple[str, int]], output_path: str) -> None:
     with open(output_path, 'w', encoding='utf-8') as file:
         for word, count in results:
             file.write(f"{word}-{count}\n")
+
+
+def main(input_file: str, output_file: str) -> None:
+    """Main function to process file and write results."""
+    text = read_file(input_file)
+    word_frequencies = process_text(text)
+    write_results(word_frequencies, output_file)
+
+if __name__ == "__main__":
+    main("input.txt", "output.txt")
