@@ -13,3 +13,10 @@ def process_text(text: str) -> list[tuple[str, int]]:
         if word:
             word_count[word] = word_count.get(word, 0) + 1
     return sorted(word_count.items(), key=lambda x: x[1], reverse=True)[:10]
+
+
+def write_results(results: list[tuple[str, int]], output_path: str) -> None:
+    """Write results to output file."""
+    with open(output_path, 'w', encoding='utf-8') as file:
+        for word, count in results:
+            file.write(f"{word}-{count}\n")
