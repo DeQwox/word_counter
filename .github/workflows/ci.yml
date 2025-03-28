@@ -1,39 +1,43 @@
-name: CI Pipeline # Назва процесу, яку ти побачиш на GitHub
+name: CI Pipeline
 
-on: # Коли запускати дії
-  push: # При відправленні змін (git push)
-    branches: [main] # Тільки для гілки "main"
-  pull_request: # При створенні pull request
+on:
+  push:
+    branches: [main]
+  pull_request:
     branches: [main]
 
-jobs: # Завдання, які виконуватимуться
-  test: # Назва завдання (може бути будь-якою)
-    runs-on: ubuntu-latest # Виконувати на віртуальній машині з Ubuntu
+jobs:
+  test:
+    runs-on: ubuntu-latest
 
-    steps: # Кроки завдання
-      - uses: actions/checkout@v3 # Завантажити твій код із репозиторію
+    steps:
+      - uses: actions/checkout@v3
 
-      - name: Set up Python # Налаштувати Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x" # Використовувати Python 3 (будь-яка остання версія)
+          python-version: "3.x"
 
-      - name: Install dependencies # Встановити бібліотеки
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests with pytest # Запустити тести
+      - name: Run tests with pytest
         run: |
           pytest --html=report.html --self-contained-html
 
-      - name: Check PEP8 compliance # Перевірити код на PEP8
+      - name: Debug - Check if report exists # Новий крок для перевірки
+        run: |
+          ls -la  # Команда, яка покаже всі файли в директорії
+
+      - name: Check PEP8 compliance
         run: |
           flake8 . --max-line-length=100
 
-      - name: Upload test report # Зберегти звіт про тести
-        uses: actions/upload-artifact@v3
-        if: always() # Завантажувати навіть якщо тести не пройшли
+      - name: Upload test report
+        uses: actions/upload-artifact@v4 # Змінили v3 на v4
+        if: always()
         with:
-          name: pytest-report # Назва звіту
-          path: report.html # Шлях до файлу звіту
+          name: pytest-report
+          path: report.html
